@@ -110,7 +110,3 @@ It’s a step towards:
 * Encouraging ethical and conscious buying
 * Blending tradition with technology
 
----
-Link for KalaKriti:
-https://kalakriti-0cvb.onrender.com/
-
