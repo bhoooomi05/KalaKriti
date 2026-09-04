@@ -1,7 +1,6 @@
 # KalaKriti
 A Digital Platform to Preserve and Promote Indian Art  and Atrisans
 
-
 KalaKriti is a web-based platform built to support Indian artisans by helping them showcase, sell, and sustain traditional art forms using modern technology. The project focuses on preserving cultural heritage while creating real income opportunities for artisans.
 
 This was developed as a **mini-project** for the *Web-Based Business Model* course, but the idea is rooted in a real-world problem.
@@ -112,3 +111,6 @@ It’s a step towards:
 * Blending tradition with technology
 
 ---
+Link for KalaKriti:
+https://kalakriti-0cvb.onrender.com/
+
