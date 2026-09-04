@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - KalaKriti</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="customer_home.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, var(--color-light-bg) 0%, #F0EBE3 50%, #E8DFD0 100%);
+      min-height: 100vh;
+    }
+    /* subtle animated background like home */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(210, 121, 77, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(181, 93, 54, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(232, 168, 124, 0.08) 0%, transparent 45%);
+      animation: particleFloat 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.5; }
+      33% { transform: translateY(-40px) scale(1.05) rotate(5deg); opacity: 0.65; }
+      66% { transform: translateY(20px) scale(0.98) rotate(-5deg); opacity: 0.55; }
+    }
+    .pd-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(210, 121, 77, 0.1);
+    }
+    .pd-nav-inner { 
+      max-width: 1200px; margin: 0 auto; padding: 0.9rem 2rem; 
+      display: flex; align-items: center; justify-content: space-between; 
+    }
+    .pd-brand { display: flex; align-items: center; gap: 0.6rem; }
+    .pd-brand .logo { height: 36px; width: 36px; border-radius: 50%; object-fit: cover; }
+    .pd-brand .name { font-family: var(--font-heading); font-weight: 700; font-size: 1.3rem; background: linear-gradient(135deg, var(--color-secondary), var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .pd-actions { display: flex; gap: 0.6rem; }
+    .pd-close-btn { border: none; border-radius: 10px; padding: 0.6rem 1rem; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; font-weight: 700; cursor: pointer; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    .product-container {
+      position: relative;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 4px solid var(--color-primary);
+      box-shadow: 0 10px 40px rgba(210,121,77,0.15), 0 0 24px rgba(210,121,77,0.25);
+      animation: borderGlow 3s ease-in-out infinite;
+      overflow: hidden;
+    }
+    /* interactive moving background inside the card */
+    .product-container::before {
+      content: '';
+      position: absolute;
+      inset: -30% -10% -30% -10%;
+      background: radial-gradient(40% 40% at 20% 30%, rgba(210,121,77,0.12), transparent 60%),
+                  radial-gradient(35% 35% at 80% 70%, rgba(181,93,54,0.10), transparent 60%),
+                  conic-gradient(from 0deg, rgba(232,168,124,0.06), transparent 40%, rgba(232,168,124,0.06));
+      filter: blur(18px);
+      animation: drift 16s linear infinite;
+      z-index: 0;
+    }
+    .product-container > * { position: relative; z-index: 1; }
+    @keyframes drift {
+      0% { transform: translateX(0) translateY(0) rotate(0deg); }
+      50% { transform: translateX(-3%) translateY(2%) rotate(180deg); }
+      100% { transform: translateX(0) translateY(0) rotate(360deg); }
+    }
+    @keyframes borderGlow { 0%,100% { box-shadow: 0 10px 40px rgba(210,121,77,0.18), 0 0 18px rgba(210,121,77,0.25); } 50% { box-shadow: 0 14px 50px rgba(210,121,77,0.28), 0 0 28px rgba(210,121,77,0.35); } }
+    .product-header { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 2rem; }
+    .product-image { width: 100%; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    /* Theme: add orange border around image */
+    .product-image { border: 4px solid var(--color-primary); }
+    .product-info h1 { color: var(--color-primary); font-size: 2.3rem; margin-bottom: 0.8rem; }
+    .product-price { font-size: 2rem; font-weight: 800; color: var(--color-primary); margin: 0.8rem 0; animation: priceGlow 2s ease infinite; }
+    .action-buttons { display: flex; gap: 0.8rem; margin-top: 1.2rem; flex-wrap: wrap; }
+    /* Make buttons highly visible on light background */
+    .action-buttons .btn-primary { background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; border: 0; box-shadow: 0 6px 18px rgba(210,121,77,0.35); }
+    .action-buttons .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(210,121,77,0.45); }
+    .action-buttons .btn-secondary { background: #fff; color: var(--color-primary); border: 2px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .action-buttons .btn-secondary:hover { background: rgba(210,121,77,0.08); }
+
+    /* Inputs within review form */
+    .review-form { background: #f5f5f5; padding: 1.2rem; border-radius: 12px; margin-top: 2rem; }
+    .review-form input, .review-form textarea, .review-form select { width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 0.9rem; font-family: inherit; }
+
+    .reviews-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid rgba(0,0,0,0.06); }
+    .review-item { background: #f9f9f9; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; border: 1px solid rgba(0,0,0,0.05); }
+    .review-header { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+
+    @media (max-width: 768px) {
+      .product-header { grid-template-columns: 1fr; }
+      .action-buttons { flex-direction: column; }
+      .pd-nav-inner { padding: 0.7rem 1rem; }
+    }
+    /* Compact header to avoid tall banner */
+    .main-nav.compact { padding: 0.9rem 5vw; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-bottom: 2px solid rgba(210,121,77,0.12); box-shadow: 0 8px 26px rgba(210,121,77,0.14); z-index: 20; }
+    .main-nav.compact .nav-brand-container { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; }
+    .main-nav.compact .nav-tagline { display: none; }
+    .main-nav.compact .nav-brand { font-size: 1.45rem; }
+    .main-nav.compact .logo-icon { height: 44px; width: 44px; }
+    /* Back button visible and compact */
+    .pd-close-btn { border: none; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); color: #fff; border-radius: 12px; padding: 0.7rem 1.15rem; font-weight: 700; box-shadow: 0 6px 16px rgba(210,121,77,0.35); }
+    .pd-close-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(210,121,77,0.45); }
+  </style>
+</head>
+<body>
+  <!-- Themed navbar to match site -->
+  <nav class="main-nav compact" style="position:sticky; top:0;">
+    <div class="nav-brand-container" onclick="window.opener ? window.opener.focus() : window.location.href='customer_home.html'">
+      <img src="logo.png" alt="KalaKriti logo" class="logo-icon">
+      <div>
+        <div class="nav-brand">KalaKriti</div>
+        <div class="nav-tagline">From Our Roots To Your Home</div>
+      </div>
+    </div>
+    <ul class="nav-links"></ul>
+    <div class="nav-actions">
+      <button class="pd-close-btn" onclick="window.close()"><i class="fas fa-arrow-left"></i> Back</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="product-container" id="productContainer">
+      <div style="text-align: center; padding: 3rem;">
+        <div class="loading" style="font-size: 1.2rem;">
+          <i class="fas fa-spinner fa-spin"></i> Loading product details...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get product data from sessionStorage
+    const productData = JSON.parse(sessionStorage.getItem('currentProduct'));
+    
+    if (!productData) {
+      document.getElementById('productContainer').innerHTML = `
+        <div style="text-align: center; padding: 3rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f44336; margin-bottom: 1rem;"></i>
+          <h2>Product not found</h2>
+          <p>Unable to load product details.</p>
+        </div>
+      `;
+    } else {
+      loadProductDetails(productData);
+    }
+
+    function loadProductDetails(product) {
+      const productId = product.id;
+      
+      // Fetch reviews for this product
+      fetch(`http://127.0.0.1:5000/reviews?product_id=${productId}`)
+        .then(res => res.json())
+        .then(data => {
+          const reviews = data.reviews || [];
+          
+          document.getElementById('productContainer').innerHTML = `
+            <div class="product-header">
+              <div>
+                <img src="${product.image_url || product.image}" alt="${product.name}" class="product-image" 
+                     onerror="this.src='https://via.placeholder.com/500x400?text=Product Image'">
+              </div>
+              
+              <div class="product-info">
+                <h1>${product.name}</h1>
+                <div style="color: #666; font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                  ${product.description || 'No description available'}
+                </div>
+                
+                <div class="product-price">
+                  ₹${(product.price || 0).toLocaleString('en-IN')}
+                </div>
+                
+                <div class="action-buttons">
+                  <button class="btn-primary" onclick="addToCartMain()">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                  </button>
+                  <button class="btn-secondary" onclick="openFeedback()">
+                    <i class="fas fa-comment"></i> Send Feedback
+                  </button>
+                  <button class="btn-secondary" onclick="openAR()">
+                    <i class="fas fa-vr-cardboard"></i> View in AR
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="reviews-section">
+              <h2 style="margin-bottom: 2rem;">
+                <i class="fas fa-star"></i> Customer Reviews (${reviews.length})
+              </h2>
+              
+              <div id="reviewsContainer">
+                ${reviews.length === 0 ? 
+                  '<p style="color: #999; font-style: italic; text-align: center; padding: 2rem;">No reviews yet. Be the first to review this product!</p>' :
+                  reviews.map(r => `
+                    <div class="review-item">
+                      <div class="review-header">
+                        <strong>${r.rating}⭐ ${r.customer_email || 'Anonymous'}</strong>
+                      </div>
+                      <p style="margin: 0.5rem 0 0 0; color: #333;">${r.text}</p>
+                    </div>
+                  `).join('')
+                }
+              </div>
+
+              <!-- Review Form -->
+              <div class="review-form">
+                <h3 style="margin-bottom: 1rem;">Leave a Review</h3>
+                <form onsubmit="submitReview(event, ${productId})">
+                  <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Rating: </label>
+                    <select id="reviewRating" style="padding: 8px; border: 2px solid #ddd; border-radius: 8px; width: 100%; margin-bottom: 1rem;" required>
+                      <option value="">Select Rating</option>
+                      <option value="5">5 ⭐ Excellent</option>
+                      <option value="4">4 ⭐ Very Good</option>
+                      <option value="3">3 ⭐ Good</option>
+                      <option value="2">2 ⭐ Fair</option>
+                      <option value="1">1 ⭐ Poor</option>
+                    </select>
+                  </div>
+                  
+                  <textarea id="reviewText" placeholder="Write your review..." required rows="4"
+                            style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 1rem; font-family: inherit;"></textarea>
+                  
+                  <input type="email" id="reviewEmail" placeholder="Your email" required
+                         style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 1rem;">
+                  
+                  <button type="submit" class="btn-primary" style="width: 100%;">
+                    <i class="fas fa-paper-plane"></i> Submit Review
+                  </button>
+                </form>
+              </div>
+            </div>
+          `;
+        })
+        .catch(err => {
+          console.error('Error loading reviews:', err);
+          document.getElementById('productContainer').innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f44336; margin-bottom: 1rem;"></i>
+              <h2>Error loading product</h2>
+              <p>Unable to load product details. Please try again.</p>
+            </div>
+          `;
+        });
+    }
+
+    function addToCartMain() {
+      // Get product from sessionStorage
+      const product = JSON.parse(sessionStorage.getItem('currentProduct'));
+      if (product) {
+        // Use the parent window's cart functionality
+        if (window.opener) {
+          window.opener.postMessage({type: 'addToCart', product: product}, '*');
+          alert('Product added to cart! Check your cart in the main window.');
+        } else {
+          alert('Product would be added to cart. Please use the main window for shopping.');
+        }
+      }
+    }
+
+    function openFeedback() {
+      const product = JSON.parse(sessionStorage.getItem('currentProduct'));
+      const email = prompt('Enter your email for feedback:');
+      if (email) {
+        const message = prompt('Enter your feedback:');
+        if (message) {
+          fetch('http://127.0.0.1:5000/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              customer_email: email,
+              product_id: product.id || null,
+              message: message
+            })
+          })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+          });
+        }
+      }
+    }
+
+    function openAR() {
+      const product = JSON.parse(sessionStorage.getItem('currentProduct'));
+      if (product && product.id) {
+        window.open(`ar-view.html?product_id=${product.id}`, '_blank');
+      } else {
+        alert('Product not found for AR view');
+      }
+    }
+
+    function submitReview(event, productId) {
+      event.preventDefault();
+      const rating = document.getElementById('reviewRating').value;
+      const text = document.getElementById('reviewText').value;
+      const email = document.getElementById('reviewEmail').value;
+      
+      fetch('http://127.0.0.1:5000/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: productId,
+          rating: rating,
+          text: text,
+          customer_email: email
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          // Reload the page to show new review
+          location.reload();
+        }
+      });
+    }
+
+    // Listen for messages from parent window
+    window.addEventListener('message', function(event) {
+      console.log('Received message:', event.data);
+    });
+  </script>
+</body>
+</html>
+

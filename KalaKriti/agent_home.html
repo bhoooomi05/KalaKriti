@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KalaKriti | Agent Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="customer_home.css">
+  <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #D2794D;
+  --secondary: #8B4513;
+  /* use the customer_home background as a reliable fallback; replace with your link if needed */
+  --nav-bg-image: url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=1800&q=80&auto=format&fit=crop');
+  /* full-page background - prefer local file for faster offline loading.
+    If you're using the new image, save it as: KalaKriti/uploads/agentbg.png
+    (or update the --page-bg-image variable if you choose a different name) */
+  --page-bg-image: url('agentbg.png');
+  --accent: #F4A460;
+  --success: #4CAF50;
+  --danger: #F44336;
+  --bg-light: #FFF8F0;
+  --text-dark: #333;
+  --text-light: #666;
+  --border: #e0e0e0;
+  --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.15);
+  --radius: 15px;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  /* full-page background image (cover + fixed) */
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* subtle overlay to keep content readable on image backgrounds (reduced opacity so image shows more) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  /* lowered alpha from 0.12 -> 0.06 */
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06));
+  pointer-events: none;
+  /* place overlay behind the rotator element which will sit at -1 */
+  z-index: -2;
+}
+
+/* ensure dashboard content sits above the overlay */
+.dashboard { position: relative; z-index: 1; }
+.navbar { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+.navbar { background: rgba(255,255,255,0.04); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(6px); }
+.navbar-container { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(4px); }
+.logo { display: flex; align-items: center; gap: 0.6rem; font-size: 1.8rem; font-weight: 700; color: white; white-space: nowrap; }
+/* align logo beside brand like customer navbar */
+.logo-icon { height: 70px; width: 70px; flex-shrink: 0; margin-right: 10px; vertical-align: middle; border-radius: 50%; object-fit: cover; }
+.nav-brand-container { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; cursor: pointer; white-space: nowrap; }
+.nav-brand { font-size: 1.6rem; font-weight: 700; }
+.nav-right { display: flex; align-items: center; }
+.profile-menu { position: relative; }
+.profile-icon { position: relative; font-size: 1.4rem; color: var(--color-text); padding: 0.5rem; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; background: transparent; border: none; display: inline-flex; align-items: center; justify-content: center; }
+.profile-icon:hover { color: var(--primary); background: rgba(210, 121, 77, 0.15); transform: scale(1.05); }
+.dropdown { position: absolute; top: calc(100% + 10px); right: 0; background: white; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-width: 200px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; z-index: 1000; }
+.dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+.dropdown a { display: block; padding: 1rem 1.5rem; color: var(--text-dark); text-decoration: none; transition: all 0.3s ease; cursor: pointer; }
+.dropdown a:hover { background: var(--bg-light); color: var(--primary); }
+.dropdown a.logout { color: var(--danger); }
+.dashboard { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+.welcome-header { background: white; border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
+.welcome-header h1 { font-size: 2.5rem; color: var(--primary); }
+.header-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.stat-card { display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, var(--accent), var(--primary)); color: white; padding: 1.2rem 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 140px; }
+.stat-card strong { display: block; font-size: 1.8rem; }
+.quick-actions { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.action-btn { flex: 1; min-width: 160px; background: white; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.8rem; font-size: 1rem; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease; }
+.action-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.card { background: white; border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; box-shadow: var(--shadow-md); }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+.card-header h2 { font-size: 1.8rem; color: var(--primary); display: flex; align-items: center; gap: 0.8rem; }
+.toggle-btn { background: none; border: none; color: var(--primary); font-size: 1.3rem; cursor: pointer; transition: all 0.3s ease; }
+.toggle-btn:hover { transform: scale(1.2); }
+.form-container { background: var(--bg-light); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-weight: 600; color: var(--text-dark); margin-bottom: 0.5rem; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select, textarea { padding: 0.8rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: white; font-family: inherit; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(210, 121, 77, 0.1); }
+textarea { resize: vertical; min-height: 80px; }
+.file-upload { border: 2px dashed var(--accent); border-radius: 12px; padding: 2rem; text-align: center; background: #fafafa; cursor: pointer; position: relative; overflow: hidden; }
+.file-upload input[type="file"] { display: none; }
+.file-label { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; cursor: pointer; font-weight: 600; color: var(--primary); }
+.file-upload.has-image .file-label { display: none !important; }
+.file-upload.has-image .image-preview { display: block !important; }
+.file-upload.has-image .remove-preview { display: flex !important; }
+.remove-preview { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,0.55); color: #fff; font-weight: 700; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 3; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
+.remove-preview:hover { background: rgba(0,0,0,0.75); }
+.image-preview { width: 100%; max-width: 100%; height: 240px; max-height: 240px; object-fit: cover; border-radius: 8px; margin-top: 0.8rem; border: 2px solid var(--accent); }
+.submit-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 1rem 2.5rem; border: none; border-radius: 25px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+.items-header { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+.filter-controls { display: flex; gap: 1rem; flex-wrap: wrap; }
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; list-style: none; }
+.item-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s ease; text-align: center; }
+.item-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-5px); }
+.item-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+.item-card strong { display: block; font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem; }
+.item-card p { color: var(--text-light); font-size: 0.9rem; }
+.delete-btn { background: var(--danger); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; margin-top: 1rem; }
+.delete-btn:hover { background: #d32f2f; }
+.message { padding: 1rem 1.5rem; border-radius: 8px; margin: 1rem 0; font-weight: 500; display: none; }
+.message.show { display: block; }
+.message.success { background: #e8f5e9; color: #2e7d32; border-left: 4px solid var(--success); }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 2000; }
+.modal.show { display: flex; }
+.modal-content { background: white; border-radius: var(--radius); padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+.modal-header h2 { color: var(--primary); }
+.close { font-size: 2rem; cursor: pointer; color: var(--text-light); background: none; border: none; }
+.close:hover { color: var(--primary); }
+.analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+.analytics-card { background: linear-gradient(135deg, var(--accent), var(--primary)); color: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow-md); }
+.analytics-card h3 { font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; }
+.big-number { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+.orders-table { width: 100%; border-collapse: collapse; }
+.orders-table th, .orders-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+.orders-table th { background: var(--bg-light); font-weight: 600; color: var(--primary); }
+.status { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.status.delivered { background: #e8f5e9; color: #2e7d32; }
+.status.pending { background: #fff3e0; color: #e65100; }
+/* subtle animated overlay on navbar for movement */
+.navbar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* slightly reduced darkness so the image is more visible under the navbar */
+  background: linear-gradient(120deg, rgba(0,0,0,0.28), rgba(0,0,0,0.12));
+  animation: navbarFlow 10s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes navbarFlow {
+  0% { transform: translateX(-8%); }
+  50% { transform: translateX(8%); }
+  100% { transform: translateX(-8%); }
+}
+
+/* make logo and tagline more legible */
+.logo { text-shadow: 0 3px 10px rgba(0,0,0,0.6); }
+.logo div { color: rgba(255,255,255,0.95); }
+/* background rotator element (covers body and crossfades images) */
+#bg-rotator { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+#bg-rotator .slide { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; opacity: 0; transition: opacity 1s ease-in-out; }
+#bg-rotator .slide.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<nav class="main-nav">
+  <div class="nav-brand-container" onclick="window.location.href='customer_home.html'">
+    <img src="logo.png" alt="KalaKriti logo" class="logo-icon">
+    <div>
+      <div class="nav-brand">KalaKriti</div>
+      <div class="nav-tagline">From Our Roots To Your Home</div>
+    </div>
+  </div>
+  <ul class="nav-links"></ul>
+  <div class="nav-actions">
+    <a href="#" class="profile-icon" id="profileBtn" title="Profile"><i class="fas fa-user-circle"></i></a>
+    <div class="dropdown" id="profileDropdown">
+      <a id="editProfileLink" href="agent_profile.html">Edit Profile</a>
+      <hr>
+      <a id="logoutLink" class="logout">Logout</a>
+    </div>
+  </div>
+  
+</nav>
+
+<div class="dashboard">
+  
+  <div class="welcome-header">
+    <div>
+  <h1>Welcome Back, KalaKar!</h1>
+      <p>Manage your products and workshops</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-card">
+        <i class="fas fa-box"></i>
+        <div>
+          <strong id="agentProductCount">0</strong>
+          <span>Products</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <div>
+          <strong id="agentWorkshopCount">0</strong>
+          <span>Workshops</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-wallet"></i>
+        <div>
+          <strong id="agentRevenue">0</strong>
+          <span>Revenue</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="action-btn" onclick="showSection('products')">
+      <i class="fas fa-plus-circle"></i> Products
+    </button>
+    <button class="action-btn" onclick="showSection('workshops'); loadAgentWorkshops();">
+      <i class="fas fa-calendar-plus"></i> Workshops
+    </button>
+    <button class="action-btn" onclick="showSection('analytics')">
+      <i class="fas fa-chart-pie"></i> Analytics
+    </button>
+    <button class="action-btn" onclick="showSection('orders')">
+      <i class="fas fa-shopping-cart"></i> Orders
+    </button>
+    <button class="action-btn" onclick="showSection('feedback-section'); loadFeedback(); loadRatings();">
+      <i class="fas fa-comments"></i> Feedback & Ratings
+    </button>
+  </div>
+
+  <!-- PRODUCTS -->
+  <section class="card" id="products" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-box"></i> Sell Product</h2>
+      <button type="button" class="submit-btn" style="padding:0.6rem 1rem; border-radius:10px;" onclick="toggleForm(this)">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+    
+    <div class="form-container" style="display:none;">
+      <form id="productForm" onsubmit="handleProductSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="name" placeholder="e.g., Madhubani Painting" required>
+          </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input type="number" name="price" placeholder="e.g., 2500" required>
+          </div>
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea name="description" placeholder="Detailed description..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category" required>
+              <option value="">Select Category</option>
+              <option value="painting">Painting</option>
+              <option value="textile">Textile</option>
+              <option value="pottery">Pottery</option>
+              <option value="jewelry">Jewelry</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Product Image</label>
+            <div class="file-upload">
+                <input type="file" name="image" accept="image/*" id="productImage" onchange="handlePreview('productImage','productPreview','productRemove','Upload Product Image')">
+                <label for="productImage" class="file-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Upload Product Image</span>
+                </label>
+                <img id="productPreview" class="image-preview" style="display:none;">
+                <button type="button" id="productRemove" class="remove-preview" aria-label="Remove image">×</button>
+            </div>
+          </div>
+          <div class="form-group full-width">
+            <label>AR/QR Code</label>
+            <div class="file-upload">
+                <input type="file" name="ar_image" accept="image/*" id="arImage" onchange="handlePreview('arImage','arPreview','arRemove','Upload QR/AR Code')">
+                <label for="arImage" class="file-label">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Upload QR/AR Code</span>
+                </label>
+                <img id="arPreview" class="image-preview" style="display:none;">
+                <button type="button" id="arRemove" class="remove-preview" aria-label="Remove image">×</button>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Post Product</button>
+      </form>
+    </div>
+    <div id="productMsg" class="message"></div>
+    
+    <div class="items-header">
+      <h3>My Products</h3>
+      <div class="filter-controls">
+        <input type="text" placeholder="Search...">
+        <select>
+          <option>All Categories</option>
+          <option>Painting</option>
+          <option>Textile</option>
+        </select>
+      </div>
+    </div>
+    <ul class="items-grid" id="productsList"></ul>
+  </section>
+
+  <!-- WORKSHOPS -->
+  <section class="card" id="workshops" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-chalkboard-teacher"></i> Conduct Workshop</h2>
+      <button type="button" class="submit-btn" style="padding:0.6rem 1rem; border-radius:10px;" onclick="toggleForm(this)">
+        <i class="fas fa-plus"></i> Add
+      </button>
+    </div>
+    
+    <div class="form-container" style="display:none;">
+      <form id="workshopForm" onsubmit="handleWorkshopSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Workshop Title</label>
+            <input type="text" name="title" placeholder="e.g., Warli Art Basics" required>
+          </div>
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea name="description" placeholder="Workshop details..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="date" required>
+          </div>
+          <div class="form-group">
+            <label>Duration (Hours)</label>
+            <input type="number" name="duration" placeholder="e.g., 2" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Mode</label>
+            <select name="mode" required>
+              <option value="online">Online</option>
+              <option value="offline">Offline</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Max Participants</label>
+            <input type="number" name="max_participants" placeholder="e.g., 20" min="1" required>
+          </div>
+          <div class="form-group full-width">
+            <label>Workshop Image</label>
+            <div class="file-upload">
+              <input type="file" accept="image/*" id="workshopImage" onchange="handlePreview('workshopImage','workshopPreview','workshopRemove','Click to upload')">
+              <label for="workshopImage" class="file-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Click to upload</span>
+              </label>
+              <img id="workshopPreview" class="image-preview" style="display:none;">
+              <button type="button" id="workshopRemove" class="remove-preview" aria-label="Remove image">×</button>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Schedule Workshop</button>
+      </form>
+    </div>
+    <div id="workshopMsg" class="message"></div>
+    
+    <div class="items-header">
+      <h3>My Workshops</h3>
+      <input type="text" placeholder="Search...">
+    </div>
+    <ul class="items-grid" id="workshopsList"></ul>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section class="card" id="analytics" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-chart-pie"></i> Analytics</h2>
+      <button type="button" class="toggle-btn" onclick="toggleForm(this)">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+    
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <h3>Total Sales</h3>
+        <p class="big-number">0</p>
+        <p>This month</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Total Orders</h3>
+        <p class="big-number">0</p>
+        <p>New orders</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Workshop Attendees</h3>
+        <p class="big-number">0</p>
+        <p>Total participants</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Satisfaction</h3>
+        <p class="big-number">0★</p>
+        <p>Average rating</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ORDERS -->
+  <section class="card" id="orders" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-shopping-cart"></i> Recent Orders</h2>
+      <button type="button" class="toggle-btn" onclick="toggleForm(this)">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+    
+    <div style="overflow-x:auto;">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ordersList"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FEEDBACK (with Ratings embedded) -->
+  <section class="card" id="feedback-section" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-comments"></i> Customer Feedback & Ratings</h2>
+    </div>
+    
+    <div id="feedbackList" style="padding: 1rem;">
+      <div class="loading">Loading feedback...</div>
+    </div>
+
+    <div style="height: 1px; background: #eee; margin: 1rem 0 1.2rem 0;"></div>
+    <h3 style="color: var(--primary); margin-bottom: 0.8rem;"><i class="fas fa-star"></i> Ratings</h3>
+    <div id="ratingsList" style="padding: 1rem;">
+      <div class="loading">Loading ratings...</div>
+    </div>
+  </section>
+
+  <!-- PAYMENTS INFO -->
+  <section class="card" id="payments" style="display:none;">
+    <div class="card-header">
+      <h2><i class="fas fa-wallet"></i> Payments</h2>
+      <button type="button" class="toggle-btn" onclick="toggleForm(this)"><i class="fas fa-chevron-down"></i></button>
+    </div>
+    <div class="form-container" style="display:none;">
+      <div class="form-grid">
+        <div class="form-group">
+          <label><i class="fas fa-info-circle"></i> Payout Status</label>
+          <input type="text" value="On-time, monthly cycle" readonly>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-university"></i> Bank Details</label>
+          <input type="text" value="Configured" readonly>
+        </div>
+        <div class="form-group full-width">
+          <label><i class="fas fa-file-invoice"></i> Notes</label>
+          <textarea readonly>Payments are processed via existing backend flow. Contact support for updates.</textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal" id="profileModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Edit Profile</h2>
+      <button type="button" class="close" onclick="closeModal()">&times;</button>
+    </div>
+    <form id="profileForm" onsubmit="handleProfileSubmit(event)">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your Name" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="email@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" placeholder="+91 98765 43210">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" placeholder="City, State">
+      </div>
+      <button type="submit" class="submit-btn">Save Changes</button>
+    </form>
+    <div id="profileMsg" class="message"></div>
+  </div>
+</div>
+
+
+<script src="agent_home.js"></script>
+<script>
+// Additional inline scripts if needed
+
+// Get agent email from session storage
+function getAgentEmail() {
+  const userInfo = sessionStorage.getItem('userInfo');
+  if (userInfo) {
+    const user = JSON.parse(userInfo);
+    return user.email || user.username;
+  }
+  return "agent@example.com"; // Fallback
+}
+
+// Load analytics on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadDashboardAnalytics();
+  
+  // Update welcome message with agent name
+  const userInfo = sessionStorage.getItem('userInfo');
+  if (userInfo) {
+    const user = JSON.parse(userInfo);
+    const welcomeElement = document.querySelector('.welcome-text');
+    if (welcomeElement) {
+      welcomeElement.textContent = `Welcome back, ${user.username}!`;
+    }
+  }
+});
+
+function toggleForm(btn) {
+  const container = btn.closest('.card-header').nextElementSibling;
+  if (container && container.classList.contains('form-container')) {
+    const isHidden = container.style.display === 'none';
+    container.style.display = isHidden ? 'block' : 'none';
+  }
+}
+
+const profileBtn = document.getElementById('profileBtn');
+const profileDropdown = document.getElementById('profileDropdown');
+const profileModal = document.getElementById('profileModal');
+
+profileBtn.addEventListener('click', () => {
+  profileDropdown.classList.toggle('active');
+});
+
+document.addEventListener('click', (e) => {
+  if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+    profileDropdown.classList.remove('active');
+  }
+});
+
+// allow Edit Profile link to navigate to a dedicated page; if href is missing or '#', open modal as fallback
+const editProfileLink = document.getElementById('editProfileLink');
+if (editProfileLink) {
+  editProfileLink.addEventListener('click', (e) => {
+    const href = editProfileLink.getAttribute('href');
+    // if a meaningful href is present, let browser navigate. Close dropdown for cleanliness.
+    if (href && href.trim() !== '' && href !== '#') {
+      profileDropdown.classList.remove('active');
+      return; // allow navigation
+    }
+    // otherwise open modal as before
+    e.preventDefault();
+    profileModal.classList.add('show');
+    profileDropdown.classList.remove('active');
+  });
+}
+
+document.getElementById('logoutLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Logged out!');
+});
+
+function closeModal() {
+  profileModal.classList.remove('show');
+}
+
+// robust image preview helpers with remove(X) support
+function bindPreview(inputId, imgId, removeId, defaultLabelText) {
+  const input = document.getElementById(inputId);
+  const img = document.getElementById(imgId);
+  const removeBtn = removeId ? document.getElementById(removeId) : null;
+  if (!input || !img) return;
+  // click on preview to re-open selector
+  img.addEventListener('click', () => input.click());
+  const applyFile = (file) => {
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    img.src = url;
+    img.style.setProperty('display','block','important');
+    const box = img.closest('.file-upload');
+    if (box) box.classList.add('has-image');
+    img.onload = () => URL.revokeObjectURL(url);
+    const labelEl = document.querySelector(`label[for="${inputId}"]`);
+    if (labelEl) {
+      const span = labelEl.querySelector('span');
+      if (span) span.textContent = 'Change Image';
+      labelEl.style.display = 'none';
+    }
+    if (removeBtn) removeBtn.style.display = 'flex';
+  };
+
+  input.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    applyFile(file);
+  });
+
+  input.addEventListener('input', (e) => {
+    const file = e.target.files && e.target.files[0];
+    applyFile(file);
+  });
+
+  // initial sync (in case browser preserves selection on reload)
+  if (input.files && input.files[0]) applyFile(input.files[0]);
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', () => {
+      // clear input
+      input.value = '';
+      // hide image
+      img.src = '';
+      img.style.display = 'none';
+      // restore label and state
+      const labelEl = document.querySelector(`label[for="${inputId}"]`);
+      if (labelEl) {
+        const span = labelEl.querySelector('span');
+        if (span && defaultLabelText) span.textContent = defaultLabelText;
+        labelEl.style.display = 'flex';
+      }
+      // hide remove
+      removeBtn.style.display = 'none';
+      const box = img.closest('.file-upload');
+      if (box) box.classList.remove('has-image');
+    });
+  }
+}
+
+bindPreview('productImage', 'productPreview', 'productRemove', 'Upload Product Image');
+
+bindPreview('workshopImage', 'workshopPreview', 'workshopRemove', 'Click to upload');
+
+// Preview AR image as well
+bindPreview('arImage', 'arPreview', 'arRemove', 'Upload QR/AR Code');
+
+// inline onchange fallback used on inputs
+function handlePreview(inputId, imgId, removeId, defaultLabelText) {
+  const input = document.getElementById(inputId);
+  const img = document.getElementById(imgId);
+  const removeBtn = removeId ? document.getElementById(removeId) : null;
+  if (!input || !img) return;
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  img.src = url;
+  img.style.setProperty('display','block','important');
+  const box = img.closest('.file-upload');
+  if (box) box.classList.add('has-image');
+  img.onload = () => URL.revokeObjectURL(url);
+  const labelEl = document.querySelector(`label[for="${inputId}"]`);
+  if (labelEl) {
+    const span = labelEl.querySelector('span');
+    if (span) span.textContent = 'Change Image';
+    labelEl.style.display = 'none';
+  }
+  if (removeBtn) removeBtn.style.display = 'flex';
+}
+
+function handleProductSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData();
+    
+    // Get form values
+    const name = form.querySelector('input[name="name"]').value;
+    const description = form.querySelector('textarea[name="description"]').value;
+    const price = form.querySelector('input[name="price"]').value;
+    const image = document.getElementById('productImage').files[0];
+    const arImage = document.getElementById('arImage').files[0];
+    
+    // Add to FormData
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("agent_email", getAgentEmail());
+    
+    if (image) {
+        formData.append("image", image);
+    }
+    
+    if (arImage) {
+        formData.append("ar_image", arImage);
+    }
+
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
+    fetch('http://127.0.0.1:5000/agent/products', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showMessage('productMsg', 'Product added successfully!', 'success');
+            form.reset();
+            document.getElementById('productPreview').style.display = 'none';
+            document.getElementById('arPreview').style.display = 'none';
+            // restore labels and default texts for next upload
+            const pLbl = document.querySelector('label[for="productImage"]');
+            if (pLbl) {
+              const s = pLbl.querySelector('span');
+              if (s) s.textContent = 'Upload Product Image';
+              pLbl.style.display = 'flex';
+            }
+            const arLbl = document.querySelector('label[for="arImage"]');
+            if (arLbl) {
+              const s2 = arLbl.querySelector('span');
+              if (s2) s2.textContent = 'Upload QR/AR Code';
+              arLbl.style.display = 'flex';
+            }
+            loadAgentProducts();
+            loadDashboardAnalytics(); // Refresh analytics
+        } else {
+            showMessage('productMsg', data.message || 'Failed to add product', 'error');
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        showMessage('productMsg', 'Server error while adding product', 'error');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Post Product';
+    });
+}
+
+function handleWorkshopSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData();
+  
+  // Get form values
+  const title = form.querySelector('input[type="text"]').value;
+  const description = form.querySelector('textarea').value;
+  const date = form.querySelector('input[type="date"]').value;
+  const image = document.getElementById('workshopImage')?.files[0];
+  
+  // Add to FormData
+  formData.append("title", title);
+  formData.append("description", description);
+  formData.append("date", date);
+  formData.append("agent_email", getAgentEmail());
+  
+  if (image) {
+    formData.append("image", image);
+  }
+  
+  // Show loading state
+  const submitBtn = form.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+  
+  fetch('http://127.0.0.1:5000/agent/workshops', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showMessage('workshopMsg', 'Workshop scheduled successfully!', 'success');
+      form.reset();
+      if (document.getElementById('workshopPreview')) {
+        document.getElementById('workshopPreview').style.display = 'none';
+      }
+      const wsLbl = document.querySelector('label[for="workshopImage"]');
+      if (wsLbl) {
+        const s = wsLbl.querySelector('span');
+        if (s) s.textContent = 'Click to upload';
+        wsLbl.style.display = 'flex';
+      }
+      loadAgentWorkshops(); // Reload workshops list
+      loadDashboardAnalytics(); // Refresh analytics
+    } else {
+      showMessage('workshopMsg', data.message || 'Failed to schedule workshop', 'error');
+    }
+  })
+  .catch(err => {
+    console.error('Error:', err);
+    showMessage('workshopMsg', 'Server error while scheduling workshop', 'error');
+  })
+  .finally(() => {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = 'Schedule Workshop';
+  });
+}
+
+function loadAgentWorkshops() {
+  const agentEmail = getAgentEmail();
+  fetch(`http://127.0.0.1:5000/agent/workshops?agent_email=${encodeURIComponent(agentEmail)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        const workshopsList = document.getElementById('workshopsList');
+        if (!workshopsList) return;
+        
+        workshopsList.innerHTML = data.workshops.map(w => `
+          <div class="item-card">
+            ${w.image_url || w.image ? `<img src="${w.image_url || ('http://127.0.0.1:5000/uploads/' + w.image)}" alt="${w.title}">` : '<div style="width: 100%; height: 150px; background: linear-gradient(135deg, #D2794D, #B55D36); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;"><i class="fas fa-chalkboard-teacher"></i></div>'}
+            <strong>${w.title}</strong>
+            <p>${w.description}</p>
+            <p class="price"><i class="fas fa-calendar"></i> ${w.date}</p>
+          </div>
+        `).join('');
+      }
+    })
+    .catch(err => {
+      console.error('Error loading workshops:', err);
+    });
+}
+
+function handleProfileSubmit(e) {
+  e.preventDefault();
+  showMessage('profileMsg', 'Profile updated successfully!', 'success');
+  closeModal();
+}
+
+function showMessage(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = `message show ${type}`;
+  setTimeout(() => {
+    el.className = 'message';
+  }, 3000);
+}
+
+console.log('Dashboard ready!');
+
+// (Payments menu & modal removed per latest requirements)
+</script>
+
+</body>
+</html>
+
+<!-- background rotator script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const candidates = [
+    'agentbg.png', 'agentbg.png',
+    'agentbg2.png', 'agentbg2.png',
+    'agentbg3.png', 'agentbg3.png'
+  ];
+  const intervalMs = 20000; // 20s default
+
+  // preload and collect only existing images
+  const loadImage = (src) => new Promise((res) => {
+    const img = new Image();
+    img.onload = () => res({ src, ok: true });
+    img.onerror = () => res({ src, ok: false });
+    img.src = src;
+  });
+
+  (async function() {
+    const results = [];
+    for (let i = 0; i < candidates.length; i++) {
+      const r = await loadImage(candidates[i]);
+      if (r.ok) results.push(r.src);
+      // stop after we found 3 distinct images
+      const distinct = Array.from(new Set(results));
+      if (distinct.length >= 3) break;
+    }
+
+    const images = Array.from(new Set(results));
+    console.log('Background rotator: found images ->', images);
+    if (images.length === 0) {
+      console.warn('Background rotator: no images found, leaving CSS background as-is.');
+      return;
+    }
+
+    // immediately set body's background-image to the first found image as a visible fallback
+    try { document.body.style.backgroundImage = `url('${images[0]}')`; } catch (e) { console.warn('Could not set body background:', e); }
+
+    // create rotator container and slides
+    const rotator = document.createElement('div');
+    rotator.id = 'bg-rotator';
+    images.forEach((img, i) => {
+      const s = document.createElement('div');
+      s.className = 'slide';
+      s.style.backgroundImage = `url('${img}')`;
+      if (i === 0) s.classList.add('show');
+      rotator.appendChild(s);
+    });
+    document.body.appendChild(rotator);
+
+    let idx = 0;
+    if (images.length > 1) {
+      setInterval(() => {
+        const slides = rotator.querySelectorAll('.slide');
+        slides[idx].classList.remove('show');
+        idx = (idx + 1) % slides.length;
+        slides[idx].classList.add('show');
+      }, intervalMs);
+    }
+  })();
+});
+</script>

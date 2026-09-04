@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>View in AR • KalaKriti</title>
+    <link rel="stylesheet" href="customer_home.css">
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        .ui { position: fixed; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: center; z-index: 10; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+        .pill { background: rgba(0,0,0,0.45); padding: 8px 12px; border-radius: 999px; backdrop-filter: blur(6px); }
+        .btn { background: #D2794D; color: #fff; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        .hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); color: #fff; background: rgba(0,0,0,0.45); padding: 8px 12px; border-radius: 999px; font-size: 0.9rem; backdrop-filter: blur(6px); }
+        .controls { position: fixed; bottom: 14px; right: 14px; display: grid; gap: 8px; z-index: 10; }
+        .ctrl-btn { background: rgba(0,0,0,0.45); color: #fff; border: 2px solid rgba(255,255,255,0.6); border-radius: 10px; padding: 10px 12px; font-weight: 800; cursor: pointer; min-width: 44px; text-align: center; }
+        #cameraFeed { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; display: none; }
+        #fallback { position: fixed; inset: 0; z-index: 1; display: none; }
+    </style>
+    <script>
+        function getQueryParam(name){ const u=new URL(window.location.href); return u.searchParams.get(name); }
+    </script>
+</head>
+<body>
+    <div class="ui">
+        <div class="pill" id="title">Loading…</div>
+        <button class="btn" onclick="history.back()">Close</button>
+    </div>
+    <div class="hint" id="hint">Move phone to scan surface, then tap to place</div>
+    <video id="cameraFeed" autoplay playsinline muted></video>
+    <canvas id="fallback"></canvas>
+    <div class="controls">
+        <button class="ctrl-btn" id="zoomIn">+</button>
+        <button class="ctrl-btn" id="zoomOut">−</button>
+        <button class="ctrl-btn" id="reset">Reset</button>
+    </div>
+    <script type="module" src="./ar-view.js"></script>
+</body>
+</html>
+
+

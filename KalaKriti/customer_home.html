@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KalaKriti - From Our Roots To Your Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="customer_home.css">
+  <style>
+    /* larger logo image beside brand and prevent wrapping */
+    .logo-icon { 
+      height: 70px; /* <-- CHANGED from 40px */
+      width: 70px;  /* <-- CHANGED from 40px */
+      flex-shrink: 0; 
+      margin-right: 10px; 
+      vertical-align: middle; 
+      border-radius: 50%;
+      object-fit: cover; 
+    }
+    .nav-brand-container { 
+      display: flex; 
+      flex-direction: row; 
+      align-items: center; 
+      gap: 0.6rem; 
+      cursor: pointer; 
+      white-space: nowrap; 
+    }
+    .nav-brand { 
+      font-size: 1.6rem; 
+      font-weight: 700; 
+    }
+  </style>
+</head>
+<body>
+
+    <nav class="main-nav">
+    <div class="nav-brand-container" onclick="window.location.reload()">
+      <img src="logo.png" alt="KalaKriti logo" class="logo-icon">
+      <div>
+        <div class="nav-brand">KalaKriti</div>
+    <div class="nav-tagline">From Our Roots To Your Home</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#explore-section">Explore</a></li>
+      <li><a href="#workshops-section">Workshops</a></li>
+      <li><a href="#sellers-section">Artisans</a></li>
+      <li><a href="#resources-section">Resources</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search handicrafts...">
+      </div>
+      <a href="#" class="cart-icon" onclick="toggleCart(event)">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+      <a href="#" class="profile-icon" onclick="toggleProfile(event)">
+        <i class="fas fa-user-circle"></i>
+      </a>
+      <button class="cta-button" onclick="window.location.href='login.html#register'">Sell Your Art</button>
+    </div>
+  </nav>
+
+    <div class="profile-dropdown" id="profileDropdown"></div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+      <button class="close-cart" onclick="toggleCart(event)">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p class="empty-cart">Your cart is empty. Start shopping!</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cartTotal">₹0</span>
+      </div>
+      <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+    <section class="hero-banner">
+    <div class="hero-content">
+      <h1>Support Local Artisans</h1>
+      <p>Empower craftspeople and preserve cultural heritage</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="scrollToSection('sellers-section')">Meet Artisans</button>
+        <button class="btn-secondary" onclick="playStories()"><i class="fas fa-play-circle"></i> Watch Stories</button>
+      </div>
+    </div>
+  </section>
+
+    <main class="explore-section" id="explore-section">
+    <h2>Explore Hand-Picked Art</h2>
+    
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('pottery', this)">Pottery</button>
+      <button class="filter-btn" onclick="filterProducts('textile', this)">Textiles</button>
+      <button class="filter-btn" onclick="filterProducts('jewelry', this)">Jewelry</button>
+      <button class="filter-btn" onclick="filterProducts('painting', this)">Paintings</button>
+      <button class="filter-btn" onclick="filterProducts('sculpture', this)">Sculptures</button>
+    </div>
+    
+    <div class="feed" id="feed">
+      <div class="loading">Loading beautiful handicrafts...</div>
+    </div>
+  </main>
+
+    <section class="workshops-section" id="workshops-section">
+    <h2>Upcoming Workshops</h2>
+    <p class="section-subtitle">Learn from master artisans and preserve traditional crafts</p>
+    <div class="workshops-grid" id="workshopsGrid">
+      <div class="loading">Loading workshops...</div>
+    </div>
+  </section>
+
+    <section class="sellers-section" id="sellers-section">
+    <h2>Featured Artisans</h2>
+    <p class="section-subtitle">Meet the talented craftspeople behind each masterpiece</p>
+    <div class="sellers-grid" id="sellersGrid">
+      <div class="loading">Loading artisans...</div>
+    </div>
+  </section>
+
+    <section class="resources-section" id="resources-section">
+    <h2>Craft Resources</h2>
+    <div class="resources-grid">
+      <div class="resource-card" onclick="openResource('blog')">
+        <i class="fas fa-blog"></i>
+        <h3>Craft Blog</h3>
+        <p>Stories and insights from the world of handicrafts</p>
+        <a href="https://www.craftcouncil.org/" target="_blank" class="resource-link">Go to Blog <i class="fas fa-external-link-alt"></i></a>
+      </div>
+      <div class="resource-card" onclick="openResource('guide')">
+        <i class="fas fa-book"></i>
+        <h3>Buyer's Guide</h3>
+        <p>Learn about different art forms and techniques</p>
+        <a href="https://handicrafts.nic.in/" target="_blank" class="resource-link">View Guide <i class="fas fa-external-link-alt"></i></a>
+      </div>
+      <div class="resource-card" onclick="openResource('video')">
+        <i class="fas fa-video"></i>
+        <h3>Video Tutorials</h3>
+        <p>Watch artisans at work and learn their secrets</p>
+        <a href="https://www.youtube.com/results?search_query=indian+handicraft+tutorials" target="_blank" class="resource-link">Watch Videos <i class="fas fa-external-link-alt"></i></a>
+      </div>
+      <div class="resource-card" onclick="openResource('community')">
+        <i class="fas fa-users"></i>
+        <h3>Community</h3>
+        <p>Connect with fellow art enthusiasts</p>
+        <a href="https://www.facebook.com/groups/indianhandicrafts" target="_blank" class="resource-link">Join Now <i class="fas fa-external-link-alt"></i></a>
+      </div>
+    </div>
+  </section>
+
+    <section class="mission-market-container">
+    <div class="mission">
+      <h2>Our Mission</h2>
+      <p>KalaKriti bridges the gap between traditional artisans and the digital world. We empower rural and tribal artists by giving them direct access to buyers, skill-based workshops, and digital literacy — ensuring that India's rich cultural legacy continues to thrive sustainably.</p>
+    </div>
+
+    <div class="market">
+      <h2>Market Insights</h2>
+      <p>The global handicrafts market is valued at <b>USD 740 billion (2024)</b> and is expected to reach <b>USD 983 billion by 2030</b>. In India alone, over <b>7 million artisans</b> are part of this ecosystem, yet most lack digital visibility. KalaKriti bridges this gap.</p>
+      <p class="references">Sources: Grand View Research (2024), Fortune Business Insights (2025)</p>
+    </div>
+  </section>
+
+    <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>KalaKriti</h3>
+        <p>Celebrating Indian Craftsmanship</p>
+        <p style="font-style: italic; margin-top: 0.5rem;">From Our Roots To Your Home</p>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+          <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#" onclick="openPage('about')">About Us</a></li>
+          <li><a href="#" onclick="openPage('contact')">Contact</a></li>
+          <li><a href="#" onclick="openPage('faq')">FAQ</a></li>
+          <li><a href="#" onclick="openPage('shipping')">Shipping Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>For Artisans</h4>
+        <ul>
+          <li><a href="#" onclick="openPage('sell')">Start Selling</a></li>
+          <li><a href="#" onclick="openPage('workshops')">Host Workshop</a></li>
+          <li><a href="#" onclick="openPage('resources')">Resources</a></li>
+          <li><a href="#" onclick="openPage('success')">Success Stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Newsletter</h4>
+        <p>Subscribe for updates and exclusive offers</p>
+        <div class="newsletter-form">
+          <input type="email" id="newsletterEmail" placeholder="Your email">
+          <button onclick="subscribeNewsletter()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KalaKriti | Made with <i class="fas fa-heart"></i> in India</p>
+    </div>
+  </footer>
+
+    <div class="modal" id="profileModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('profileModal')">&times;</span>
+      <h2>Edit Profile</h2>
+      <form onsubmit="saveProfile(event)">
+        <input type="text" id="editName" placeholder="Full Name" required>
+        <input type="email" id="editEmail" placeholder="Email" required>
+        <input type="tel" id="editPhone" placeholder="Phone Number">
+        <textarea id="editAddress" placeholder="Address" rows="3"></textarea>
+        <button type="submit" class="save-btn">Save Changes</button>
+      </form>
+      <button class="cta-button" onclick="logout()" style="margin-top: 1rem; background: #c0392b;">Logout</button>
+    </div>
+  </div>
+
+  <div class="modal" id="sellModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('sellModal')">×</span>
+      <h2 style="text-align:center;">Register as Kalakar</h2>
+      <p style="text-align:center; color:#666; margin-bottom:1rem;">Start your journey on KalaKriti. Create your Kalakar account to list products and host workshops.</p>
+      <div style="display:grid; gap:0.8rem;">
+        <a href="agent_home.html" class="save-btn" style="text-align:center; width:100%;">
+          Continue to Kalakar Registration
+        </a>
+        <a href="#sellers-section" onclick="closeModal('sellModal')" class="btn-secondary" style="text-align:center; padding:0.9rem 1.2rem; border:2px solid var(--color-primary); border-radius:12px; color:var(--color-primary);">
+          Explore Featured Artisans
+        </a>
+      </div>
+    </div>
+  </div>
+
+    <div class="modal" id="artisanModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('artisanModal')">&times;</span>
+      <div id="artisanProfileContent"></div>
+    </div>
+  </div>
+
+    <div class="modal" id="paymentModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('paymentModal')">&times;</span>
+      <h2 style="text-align: center; margin-bottom: 1.5rem;">💳 Complete Payment</h2>
+      
+      <div id="orderSummary" style="background: #f5f5f5; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;"></div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Select Payment Method</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+          <button type="button" class="payment-method-btn active" data-method="upi" onclick="selectPaymentMethod('upi', this)">
+            <i class="fas fa-mobile-alt"></i> UPI
+          </button>
+          <button type="button" class="payment-method-btn" data-method="card" onclick="selectPaymentMethod('card', this)">
+            <i class="fas fa-credit-card"></i> Card
+          </button>
+          <button type="button" class="payment-method-btn" data-method="netbanking" onclick="selectPaymentMethod('netbanking', this)">
+            <i class="fas fa-university"></i> Net Banking
+          </button>
+          <button type="button" class="payment-method-btn" data-method="wallet" onclick="selectPaymentMethod('wallet', this)">
+            <i class="fas fa-wallet"></i> Wallet
+          </button>
+        </div>
+      </div>
+
+      <form id="paymentForm" onsubmit="processPayment(event)">
+        <div id="paymentMethodDetails"></div>
+        <button type="submit" class="save-btn" style="width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 1rem;">
+          Pay <span id="finalAmount">₹0</span>
+        </button>
+      </form>
+      
+      <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #666;">
+        <i class="fas fa-lock"></i> 100% Secure Payment Gateway
+      </p>
+    </div>
+  </div>
+
+  <script src="customer_home.js"></script>
+  
+  <!-- Product detail modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+      <span class="close-modal" onclick="closeModal('productModal')">&times;</span>
+      <div id="productDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- Feedback modal -->
+  <div class="modal" id="feedbackModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('feedbackModal')">&times;</span>
+      <h2 style="margin-bottom: 1rem;">Send Feedback</h2>
+      <form id="feedbackForm">
+        <input type="hidden" id="feedbackProductId">
+        <div class="form-group">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Your Email</label>
+          <input type="email" id="feedbackEmail" placeholder="your@email.com" required style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 1rem;">
+        </div>
+        <div class="form-group">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message</label>
+          <textarea id="feedbackMessage" placeholder="Share your feedback..." required rows="4" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"></textarea>
+        </div>
+        <button type="submit" class="save-btn" style="width: 100%;">Submit Feedback</button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const email = document.getElementById('feedbackEmail').value;
+    const message = document.getElementById('feedbackMessage').value;
+    const productId = document.getElementById('feedbackProductId').value;
+    
+    fetch('http://127.0.0.1:5000/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_email: email,
+        product_id: productId || null,
+        message: message
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      if (data.success) {
+        closeModal('feedbackModal');
+        document.getElementById('feedbackForm').reset();
+      }
+    });
+  });
+</script>
+</body>
+</html>

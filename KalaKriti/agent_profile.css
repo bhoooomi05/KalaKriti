@@ -1,0 +1,11 @@
+/* Small page-specific adjustments for agent_profile.html */
+.file-upload { max-width: 220px; margin: 0 auto; }
+#avatarUpload .image-preview { border-radius: 50%; width: 160px; height: 160px; object-fit: cover; }
+#avatarUpload .file-label { padding: 1rem; }
+#avatarUpload .remove-preview { top: 8px; right: 8px; }
+
+.card { padding: 1.5rem; }
+
+@media (max-width: 768px) {
+  #avatarUpload .image-preview { width: 120px; height: 120px; }
+}

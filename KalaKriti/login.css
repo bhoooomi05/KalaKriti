@@ -1,0 +1,539 @@
+/* ------------------- Fonts ------------------- */
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,600,700");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* ------------------- Global ------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", "Nunito", sans-serif;
+  background-color: #5c524f;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* ------------------- Main Background Page ------------------- */
+.main-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.main-background video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.main-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1;
+}
+
+.bg-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+}
+
+.bg-content h1 {
+  font-size: 65px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+  letter-spacing: -2px;
+}
+
+/* --- FIX: ADDED MISSING CLOSING BRACKET '}' --- */
+.logo-icon {
+  height: 40px;
+  width: 40px; /* Added width for circular shape */
+  margin-right: 10px;
+  vertical-align: middle;
+  border-radius: 50%; /* Makes the image circular */
+  overflow: hidden; /* Ensures the image is clipped within the circle */
+  object-fit: cover; /* Ensures the image covers the circular area */
+}
+
+.bg-content p {
+  font-size: 28px;
+  font-style: italic;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* ------------------- Auto Modal Overlay ------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.6s ease-in-out;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ------------------- Typography ------------------- */
+h1 {
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  margin: 0 0 15px;
+}
+
+h1.title {
+  font-size: 40px;
+  line-height: 40px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0.5px;
+  margin: 15px 0 25px;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #eee;
+}
+
+span {
+  font-size: 13px;
+  margin-top: 15px;
+  color: #666;
+}
+
+a {
+  color: #b06d64;
+  font-size: 13px;
+  text-decoration: none;
+  margin: 12px 0;
+  transition: 0.3s ease-in-out;
+}
+
+a:hover {
+  color: #a25c52;
+}
+
+/* ------------------- Form Elements (More Compact) ------------------- */
+form {
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 40px;
+  height: 100%;
+  text-align: center;
+  border-radius: 25px;
+}
+
+input,
+select {
+  background-color: #fff;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid #adadad;
+  padding: 10px 5px;
+  margin: 6px 0;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-bottom: 2px solid #5c524f;
+  transform: translateY(-2px);
+}
+
+input::placeholder,
+select option:first-child {
+  color: #999;
+  font-style: italic;
+}
+
+input:focus::placeholder {
+  color: #ccc;
+}
+
+#username {
+  background: linear-gradient(90deg, #fefefe 0%, #ffffff 100%);
+  border-bottom: 2px solid #b06d64;
+  border-radius: 8px 8px 0 0;
+  position: relative;
+}
+
+#username:focus {
+  background: linear-gradient(90deg, #ffffff 0%, #fcfcfc 100%);
+  border-bottom: 3px solid #5c524f;
+  box-shadow: 0 2px 8px rgba(92, 82, 79, 0.2);
+}
+
+.form-control,
+.form-control2 {
+  width: 100%;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.form-control small,
+.form-control2 small {
+  color: #e74c3c;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  font-size: 10px;
+  z-index: 100;
+  font-weight: 500;
+}
+
+.form-control span,
+.form-control2 span {
+  position: absolute;
+  border-bottom: 3px solid #b06d64;
+  left: 0;
+  bottom: 8px;
+  width: 0%;
+  transition: all 0.3s ease;
+}
+
+.form-control input:focus ~ span,
+.form-control2 input:focus ~ span {
+  width: 100%;
+}
+
+/* Visible helper below inputs (e.g., password rule) */
+.form-hint {
+  font-size: 11px;
+  color: #795548;
+  text-align: left;
+  width: 100%;
+  margin-top: -6px;
+}
+
+/* Ensure error text stays readable */
+.form-control small, .form-control2 small {
+  color: #e53935;
+  text-shadow: none;
+}
+
+/* ------------------- Buttons (Compact) ------------------- */
+button {
+  position: relative;
+  border-radius: 25px;
+  border: 1px solid #a25c52;
+  background: linear-gradient(135deg, #b06d64 0%, #a25c52 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 12px 0;
+  padding: 10px 60px;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(176, 109, 100, 0.4);
+}
+
+button:hover {
+  letter-spacing: 2px;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(176, 109, 100, 0.6);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button.ghost {
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid #fff;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+button.ghost:hover {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+#login i {
+  position: absolute;
+  left: 35px;
+}
+
+#register i {
+  position: absolute;
+  right: 35px;
+}
+
+/* ------------------- Container & Panels (More Compact) ------------------- */
+.container {
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(25px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+    0 0px 30px rgba(176, 109, 100, 0.6);
+  position: relative;
+  overflow: hidden;
+  width: 960px; /* larger default */
+  max-width: 96%;
+  min-height: 620px; /* room for fields */
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  transition: all 0.6s ease;
+}
+
+.modal-overlay.show .container {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.login-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.register-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.container.right-panel-active .login-container {
+  transform: translateX(100%);
+}
+
+.container.right-panel-active .register-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%, 49.99% { opacity: 0; z-index: 1; }
+  50%, 100% { opacity: 1; z-index: 5; }
+}
+
+/* ------------------- Overlay ------------------- */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.container.right-panel-active .overlay-container {
+  transform: translate(-100%);
+}
+
+.overlay {
+  background-image: url("uploads/login.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay::before {
+  content: none;
+}
+
+.container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left { transform: translateX(-20%); }
+.container.right-panel-active .overlay-left { transform: translateX(0); }
+.overlay-right { right: 0; transform: translateX(0); }
+.container.right-panel-active .overlay-right { transform: translateX(20%); }
+
+/* ------------------- Content Styling ------------------- */
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 12px 0;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checkbox input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.pass-link a {
+  color: #b06d64;
+  font-size: 12px;
+}
+
+.pass-link a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------- Auto Popup Animations ------------------- */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes containerPopup {
+  0% {
+    transform: scale(0.5) translateY(200px) rotateX(30deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05) translateY(-20px) rotateX(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1) translateY(0) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.modal-overlay.auto-show {
+  animation: modalFadeIn 0.8s ease-out;
+}
+
+.modal-overlay.show .container {
+  animation: containerPopup 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ------------------- Responsive Design ------------------- */
+@media (max-width: 1000px) {
+  .container {
+    width: 90%;
+    min-height: 580px;
+  }
+  
+  form {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    min-height: 550px;
+    flex-direction: column;
+  }
+  
+  .overlay-container {
+    display: none;
+  }
+  
+  .login-container,
+  .register-container {
+    width: 100% !important;
+    position: relative;
+  }
+
+  .bg-content h1 {
+    font-size: 45px;
+  }
+
+  .bg-content p {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 0 30px;
+  }
+
+  .container {
+    min-height: 500px;
+  }
+}
+
+/* Style for the logo image */
+.logo-icon {
+  height: 40px;
+  width: 40px; /* Added width for circular shape */
+  margin-right: 10px;
+  vertical-align: middle;
+  border-radius: 50%; /* Makes the image circular */
+  overflow: hidden; /* Ensures the image is clipped within the circle */
+  object-fit: cover; /* Ensures the image covers the circular area */
+}

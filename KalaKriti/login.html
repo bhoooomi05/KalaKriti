@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KalaKriti - Auto Login</title>
+    <link rel="stylesheet" href="login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      /* Background Video Style */
+      .bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      .main-background {
+        position: relative;
+        text-align: center;
+        color: #fff;
+        padding: 80px 20px;
+        z-index: 1;
+      }
+
+      .main-background h1,
+      .main-background p {
+        background: rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+      }
+      /* Style for the logo image */
+      .logo-icon {
+        height: 40px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+
+      /* Standardized status messages */
+      .form-status { 
+        margin: 10px 0; 
+        padding: 4px 8px;
+        font-weight: 600; 
+        font-size: 0.9rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .form-status.success { 
+        color: #1b5e20; 
+      }
+      .form-status.error { 
+        color: #d32f2f; 
+      }
+      
+      /* Hide always-on hints */
+      .form-hint { display: none !important; }
+
+      /* Standardized validation error messages */
+      .form-control small,
+      .form-control2 small { 
+        color: #d32f2f;
+        font-weight: 500;
+        visibility: hidden;
+        display: block;
+        margin: 4px 0;
+        padding: 4px 0;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+      }
+      
+      .form-control.invalid small,
+      .form-control2.invalid small { 
+        visibility: visible; 
+      }
+      
+      .form-control.invalid input,
+      .form-control2.invalid input,
+      .form-control.invalid select,
+      .form-control2.invalid select { 
+        border-color: #ef5350 !important; 
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(239,83,80,0.1);
+        transition: all 0.3s ease;
+      }
+
+      /* Sound toggle button for background video */
+      #videoSoundToggle {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 1100;
+        background: rgba(255,255,255,0.9);
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-weight: 700;
+        font-size: 13px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <video autoplay muted loop playsinline class="bg-video" id="bgVideo">
+      <source src="uploads/loginvideo.mp4" type="video/mp4" />
+      Your browser does not support HTML5 video.
+    </video>
+
+    <button id="videoSoundToggle" aria-label="Enable sound" title="Enable sound">
+      🔊 Enable Sound
+    </button>
+
+    <!-- Removed large overlay headings to let the video be the hero -->
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="container" id="container">
+        <div class="form-container register-container">
+          <form>
+            <h1>Register</h1>
+            <div id="register-status" class="form-status"></div>
+            <div class="form-control">
+              <input type="text" id="username" placeholder="Name" required />
+              <small id="username-error"></small>
+              <span></span>
+            </div>
+            <div class="form-control">
+              <input type="email" id="email" placeholder="Email" required />
+              <small id="email-error"></small>
+              <span></span>
+            </div>
+            <div class="form-control">
+              <input type="password" id="password" placeholder="Password (min 8 characters)" minlength="8" required />
+              <small id="password-error"></small>
+              <span></span>
+              <div class="form-hint">Use at least 8 characters.</div>
+            </div>
+            <div class="form-control">
+              <input type="password" id="confirm-password" placeholder="Confirm Password" minlength="8" required />
+              <small id="confirm-password-error"></small>
+              <span></span>
+            </div>
+
+            <div class="form-control">
+              <select id="role" required>
+                <option value="" disabled selected>Are you a User or KalaKar?</option>
+                <option value="user">User</option>
+                <option value="KalaKar">KalaKar</option>
+              </select>
+            </div>
+
+            <button type="submit" value="submit">Register</button>
+          </form>
+        </div>
+
+        <div class="form-container login-container">
+          <form class="form-lg">
+            <h1>Login</h1>
+            <div id="login-status" class="form-status"></div>
+            <div class="form-control2">
+              <input type="text" class="username-2" placeholder="Username" required />
+              <small class="username-error-2"></small>
+              <span></span>
+            </div>
+            <div class="form-control2">
+              <input type="password" class="password-2" placeholder="Password (min 8 characters)" minlength="8" required />
+              <small class="password-error-2"></small>
+              <span></span>
+              <div class="form-hint">Use at least 8 characters.</div>
+            </div>
+            <div class="form-control2">
+              <select class="role-2">
+                <option value="" disabled selected>Are you a User or KalaKar?</option>
+                <option value="user">User</option>
+                <option value="KalaKar">KalaKar</option>
+              </select>
+            </div>
+
+            <div class="content">
+              <div class="checkbox">
+                <input type="checkbox" name="checkbox" id="checkbox" />
+                <label for="checkbox">Remember me</label>
+              </div>
+              <div class="pass-link">
+                <a href="#">Forgot your password?</a>
+              </div>
+            </div>
+            <button type="submit" value="submit">Login</button>
+          </form>
+        </div>
+
+        <div class="overlay-container">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1 class="title">
+                <img src="logo.png" class="logo-icon" /> KalaKriti
+              </h1>
+              <p><em>From our Roots, To Your Home!</em></p>
+              <p>If you already have an account, login here and enjoy</p>
+              <button class="ghost" id="login">
+                Login
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+            </div>
+
+            <div class="overlay-panel overlay-right">
+              <h1 class="title">
+                <img src="logo.png" class="logo-icon" /> KalaKriti
+              </h1>
+              <p><em>From our Roots, To Your Home!</em></p>
+              <p>If you don't have an account yet, join us and start your journey</p>
+              <button class="ghost" id="register">
+                Register
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="login.js"></script>
+    <script>
+      // Open Register panel when visiting login.html#register
+      (function() {
+        function openRegisterFromHash() {
+          if (location.hash === '#register') {
+            var btn = document.getElementById('register');
+            if (btn) btn.click();
+          } else if (location.hash === '#login') {
+            var lbtn = document.getElementById('login');
+            if (lbtn) lbtn.click();
+          }
+        }
+        document.addEventListener('DOMContentLoaded', openRegisterFromHash);
+        window.addEventListener('hashchange', openRegisterFromHash);
+      })();
+    </script>
+  </body>
+</html>
