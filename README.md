@@ -2,6 +2,12 @@
 A Digital Platform to Preserve and Promote Indian Art  and Atrisans
 
 KalaKriti is a web-based platform built to support Indian artisans by helping them showcase, sell, and sustain traditional art forms using modern technology. The project focuses on preserving cultural heritage while creating real income opportunities for artisans.
+<img width="1912" height="976" alt="K7" src="https://github.com/user-attachments/assets/74a30f64-65d3-4220-9e36-d6501c1012cf" />
+<img width="1912" height="921" alt="K6" src="https://github.com/user-attachments/assets/81764dac-ed90-4c20-bbbc-7b67a269403c" />
+<img width="1907" height="902" alt="K5" src="https://github.com/user-attachments/assets/c1573a5c-a97c-4d7d-89d3-4708529fd5b7" />
+<img width="1911" height="921" alt="k4" src="https://github.com/user-attachments/assets/6c7fb13c-450c-4ece-a517-07acf498515e" />
+<img width="1917" height="917" alt="K3" src="https://github.com/user-attachments/assets/5cbd14eb-02de-44e6-8a27-d1d9fd67ddb7" />
+<img width="1917" height="920" alt="K1" src="https://github.com/user-attachments/assets/a606f9d5-6546-4a27-9dd0-c7c65bbad9d9" />
 
 This was developed as a **mini-project** for the *Web-Based Business Model* course, but the idea is rooted in a real-world problem.
 
